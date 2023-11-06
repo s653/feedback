@@ -1,0 +1,101 @@
+version: '3'
+
+networks:
+  feedback:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
+
+
+services:
+  
+  feedback_webserver:
+    image: nginx:alpine
+    container_name: ${DOCKER_WEB_SERVICE_NAME}_${ENV}
+    restart: unless-stopped
+    tty: true
+    env_file: .env
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx/${ENV}/conf.d/:/etc/nginx/conf.d/
+      - ./docker/nginx/certificates/local/feedback.local.com.crt:/etc/ssl/feedback.local.com.crt
+      - ./docker/nginx/certificates/local/feedback.local.com.key:/etc/ssl/feedback.local.com.key
+
+      # PROD CERTS
+      #- ./docker/nginx/certificates/feedback.com/fullchain.pem:/etc/letsencrypt/live/feedback.com/fullchain.pem
+      #- ./docker/nginx/certificates/feedback.com/privkey.pem:/etc/letsencrypt/live/feedback.com/privkey.pem
+      
+    depends_on:
+      - feedback_backend
+      - feedback_frontend
+    networks:
+      - feedback
+      
+    
+  feedback_backend:
+    build:
+      args:
+        user: feedback
+        uid: 1000
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
+    container_name: ${DOCKER_BACKEND_SERVICE_NAME}_${ENV}
+    restart: unless-stopped
+    working_dir: /var/www/html/feedback/backend
+    env_file: .env
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/php/php.all.ini:/usr/local/etc/php/conf.d/custom.ini
+    # - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    expose:
+      - 9000
+    networks:
+      - feedback
+      
+
+  feedback_db:
+    image: mysql:8.0.22
+    container_name: ${DOCKER_DB_SERVICE_NAME}_${ENV}
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./docker/mysql/${ENV}.cnf:/etc/my.cnf
+      - ./logs/mysql/feedback:/var/log/mysql
+    entrypoint: ""
+    command: bash -c "chown -R mysql:mysql /var/log/mysql && exec /entrypoint.sh mysqld --default-authentication-plugin=mysql_native_password"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      SERVICE_TAGS: ${ENV}
+      SERVICE_NAME: mysql
+    ports:
+      - ${DB_EXPOSED_PORT}:3306
+    networks:
+      - feedback
+      
+
+  feedback_frontend:
+    tty: true
+    #command: tail -f /dev/null 
+    build:
+      context: .
+      dockerfile: ./docker/frontend/${ENV}/vue.dockerfile
+    container_name: ${DOCKER_FRONTEND_SERVICE_NAME}_${ENV}
+    #restart: unless-stopped
+    working_dir: /var/www/html/feedback/frontend
+    env_file: .env
+    ports: 
+      - 8080:8080
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - feedback
+      
