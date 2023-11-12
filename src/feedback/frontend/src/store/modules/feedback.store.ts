@@ -26,6 +26,6 @@ export const actions = {
     const res = await axios.post('api/feedbacks', data);
     if(res.status === 201) {
     }
-    return res.data;
+    return res;
   }
 }

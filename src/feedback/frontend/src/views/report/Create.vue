@@ -1,6 +1,8 @@
 <template>
-  <header class="inverted">
-    <h2 class="text-center">Feedback</h2>
+  <section class="container d-flex justify-content-center align-items-center" style="height: 70vh; max-height: 100vh;">
+  <div class="col-md-8">
+  <header class="inverted my-5">
+    <h2 class="text-center">Report Query</h2>
   </header>
   <form class="row g-3" @submit.prevent="onSubmit">
       <div class="col-md-12">
@@ -23,12 +25,15 @@
         <button type="submit" class="w-100 mt-2 submit" :disabled="loading">Submit</button>
       </div>
     </form>
+    </div>
+  </section>
 </template>
 <script lang="ts">
   import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
   import CKEditor from "@ckeditor/ckeditor5-vue"
   import { computed, onBeforeMount, ref } from "@vue/runtime-core";
   import { useStore } from "vuex";
+  import { useRouter } from "vue-router";
 
   export default {
     name: 'create',
@@ -38,8 +43,7 @@
     setup() {
 
       const store = useStore();
-
-      console.log("store ==> ", store)
+      const router = useRouter();
 
       const form = ref({
         title: '',
@@ -56,9 +60,10 @@
 
       const onSubmit = () => {
         loading.value = true
-        store.dispatch("createFeedback", form.value).then(res => {
+        store.dispatch("createFeedback", form.value).then((res:any) => {
+          loading.value = false
           if(res.status === 201) {
-            loading.value = false
+            router.push('/')
           }
         })
       }

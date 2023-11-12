@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 
@@ -36,13 +36,20 @@ const loading = ref(false)
 const router = useRouter();
 const store = useStore();
 
+onBeforeMount(() => {
+  let token = localStorage.getItem("TOKEN");
+  if(token) {
+    router.push('/');
+  }
+})
+
+
 const onSubmit = async (event) => {
   event.preventDefault()
   loading.value = true;
   store.dispatch("login", form.value).then(res => {
     if(res.status === 200) {
-      loading.value = false;
-      router.push('/')
+      window.location.reload()
     }
   })
 };

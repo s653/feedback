@@ -13,11 +13,24 @@ class Feedback extends Model
         'title',
         'description',
         'user_id',
-        'category_id'
+        'voter_ids',
+        'category_id',
+        'total_votes',
+        'total_comments'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getVoterIds()
+    {
+        return $this->voter_ids ? explode(',', ) : [];
+    }
+
+    public function setVoterIds($voterIds)
+    {
+        return $voterIds ? implode(',', $voterIds) : "";
     }
 }

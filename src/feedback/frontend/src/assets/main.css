@@ -1,14 +1,23 @@
 @import './base.css';
 
+body {
+  position: relative;
+}
 #app {
   /* max-width: 1280px;
   margin: 0 auto; */
-  padding: 2rem;
   padding-top: 0px;
   font-weight: normal;
 }
 nav{
   margin-top: 0px !important;
+  margin-top: 0px ;
+  margin-left: 0px !important;
+  position: sticky;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 999;
 }
 .ck-editor {
   color: #212529;

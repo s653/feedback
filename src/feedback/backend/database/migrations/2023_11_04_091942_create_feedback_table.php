@@ -17,8 +17,11 @@ class CreateFeedbackTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('description');
+            $table->string("voter_ids")->nullable();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('category_id')->constrained();
+            $table->unsignedBigInteger('total_votes')->default(0);
+            $table->unsignedBigInteger('total_comments')->default(0);
             $table->timestamps();
         });
     }
