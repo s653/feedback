@@ -7,7 +7,7 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 use App\Models\Feedback;
-use App\Observers\FeedbackObserver;
+use App\Observers\VoteObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -29,6 +29,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Feedback::observe(FeedbackObserver::class);
+        // Feedback::observe(VoteObserver::class);
     }
 }

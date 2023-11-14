@@ -18,7 +18,14 @@ class FeedbackResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
+            'isVoted' => $this->checkIfAlreadyVoted($this->voter_ids),
+            'total_votes' => $this->total_votes,
+            'total_comments' => $this->total_comments,
             'created_at' => $this->created_at
         ];
+    }
+
+    private function checkIfAlreadyVoted($voterIds): bool {
+        return sizeof($voterIds) > 0 ? in_array(auth()->id(), $voterIds) : false;
     }
 }

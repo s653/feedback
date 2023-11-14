@@ -32,15 +32,17 @@ class VoteService implements Service
         return ProfileResource::collection($voters);
     }
 
-    public function update($data, $id)
+    public function update($data, $id = null)
     {
         $vote = Vote::where('feedback_id', $data['feedback_id'])->where('user_id', auth()->id())->first();
         if($vote) {
             $vote->delete();
-            return new ProfileResource($voter->user());
+            return "vote deleted";
+            return new ProfileResource(auth()->user());
         } else {
-            $voter = Vote::create($data+['user_id' => auth()->id()]);
-            return new ProfileResource($voter->user());
+            $vote = Vote::create($data+['user_id' => auth()->id()]);
+            return "vote created";
+            return new ProfileResource(auth()->user());
         }
     }
 

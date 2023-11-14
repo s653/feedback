@@ -24,13 +24,13 @@ class Feedback extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getVoterIds()
+    protected function getVoterIdsAttribute($value)
     {
-        return $this->voter_ids ? explode(',', ) : [];
+        return $value && !is_null($value) ? explode(',', $value) : [];
     }
 
-    public function setVoterIds($voterIds)
-    {
-        return $voterIds ? implode(',', $voterIds) : "";
-    }
+    // protected function setVoterIdsAttribute($voterIds)
+    // {
+    //     return $voterIds ? implode(',', $voterIds) : "";
+    // }
 }

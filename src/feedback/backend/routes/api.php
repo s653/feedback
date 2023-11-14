@@ -6,7 +6,8 @@ use App\Http\Controllers\Api\{
     AuthController,
     FeedbackController,
     CommentController,
-    CategoryController
+    CategoryController,
+    VoteController
 };
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::apiResources([
         'categories' => CategoryController::class,
         'feedbacks' => FeedbackController::class,
-        'comments' => CommentController::class
+        'comments' => CommentController::class,
+        'votes' => VoteController::class
     ]);
 });

@@ -18,16 +18,16 @@ class VoteController extends Controller
         return (new VoteService)->index();
     }
 
-    // /**
-    //  * Store a newly created resource in storage.
-    //  *
-    //  * @param  \Illuminate\Http\Request  $request
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function store(Request $request)
-    // {
-    //     return (new VoteService)->update($request->only(['feedback_id']));
-    // }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        return (new VoteService)->update($request->only(['feedback_id']));
+    }
 
     /**
      * Display the specified resource.

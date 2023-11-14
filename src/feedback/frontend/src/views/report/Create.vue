@@ -18,7 +18,7 @@
       <div class="col-md-12">
         <label for="inputPassword4" class="form-label">Description</label>
         <div id="app" style="padding: 0px;">
-          <ckeditor :editor="editor" v-model="editorData" @ready="onReady" @input="onChange"></ckeditor>
+          <ckeditor :editor="editor" v-model="form.description" @ready="onReady" @input="onChange"></ckeditor>
         </div>
       </div>
       <div class="col-12 d-flex justify-content-center">
@@ -47,12 +47,11 @@
 
       const form = ref({
         title: '',
-        description: '',
+        description: '<p>Hello from solo individual!</p>',
         category_id: ''
       })
       const loading = ref(false)
       const editor = ref(ClassicEditor)
-      const editorData = ref("<p>Hello from solo individual!</p>")
 
       onBeforeMount(() => {
         store.dispatch("getCategories");
@@ -71,7 +70,6 @@
         console.log( "CKEditor5 Vue Component is ready to use!", editor );
       }
       const onChange = ( data: any ) => {
-        form.value.description = data;
         console.log( data );
       }
 
@@ -80,7 +78,6 @@
         form,
         loading,
         editor,
-        editorData,
         onSubmit,
         onReady,
         onChange

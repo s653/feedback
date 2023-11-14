@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Vote;
 use App\Models\Feeback;
+use Log;
 
 class VoteObserver
 {
@@ -17,7 +18,10 @@ class VoteObserver
     {
         $feedback = Feedback::firstOrFail($vote->feedback_id);
         $feedback->voter_ids->push($feedback->user_id);
-        $feedback->save();
+        Feedback::update([
+            'voter_ids' => $feedback->voter_ids
+        ]);
+        Log::info($feedback->voter_ids);
     }
 
     /**
@@ -39,7 +43,12 @@ class VoteObserver
      */
     public function deleted(Vote $vote)
     {
-        //
+        $feedback = Feedback::firstOrFail($vote->feedback_id);
+        $feedback->voter_ids->push($feedback->user_id);
+        Feedback::update([
+            'voter_ids' => $feedback->voter_ids
+        ]);
+        Log::info($feedback->voter_ids);
     }
 
     /**
